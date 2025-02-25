@@ -28,6 +28,12 @@ app.get("/get_highscore", (req, res) => {
 // Endpunkt API zum setzten des Highscores
 app.post("/set_highscore", (req, res) => {
     const newScore = req.body.score;
+    const providedKey = req.headers["x-api-key"];
+
+    if (providedKey !== API_KEY){
+        return res.status(403).json({error: "Ungültiger API-Schlüssel!"})
+    }
+
     if (newScore > highscore) {
         highscore = newScore;
         fs.writeFileSync(FILE_PATH, JSON.stringify({highscore}));
